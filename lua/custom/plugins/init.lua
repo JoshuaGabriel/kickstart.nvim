@@ -60,4 +60,37 @@ return {
       require('leap').add_default_mappings()
     end,
   },
+  -- {
+  --   'ruifm/gitlinker.nvim',
+  --   dependencies = {
+  --     {
+  --       'nvim-lua/plenary.nvim',
+  --     },
+  --   },
+  --   config = function()
+  --     require('gitlinker').setup {
+  --       opts = {
+  --         -- Opens the URL in your default browser
+  --         action_callback = require('gitlinker.actions').open_in_browser,
+  --         add_current_line_on_normal_mode = true,
+  --         git_command = 'git rev-parse HEAD',
+  --         -- Add current line number to URL in normal mode
+  --         print_url = true,
+  --       },
+  --       -- mappings = nil, -- Disable default mappings
+  --     }
+  --
+  --     -- Set up a custom key mapping (optional)
+  --     -- vim.api.nvim_set_keymap('n', '<leader>gy', "<cmd>lua require'gitlinker'.get_buf_range_url('n')<CR>", { silent = true, noremap = true })
+  --   end,
+  -- },
+  {
+    'linrongbin16/gitlinker.nvim',
+    cmd = 'GitLink',
+    opts = {},
+    keys = {
+      { '<leader>gy', '<cmd>GitLink<cr>', mode = { 'n', 'v' }, desc = 'Yank git link' },
+      { '<leader>gY', '<cmd>GitLink!<cr>', mode = { 'n', 'v' }, desc = 'Open git link' },
+    },
+  },
 }
