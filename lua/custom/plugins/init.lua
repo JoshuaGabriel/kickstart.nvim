@@ -89,7 +89,7 @@ return {
     cmd = 'GitLink',
     opts = {},
     keys = {
-      { '<leader>gy', '<cmd>GitLink<cr>', mode = { 'n', 'v' }, desc = 'Yank git link' },
+      { '<leader>gy', '<cmd>GitLink<cr>',  mode = { 'n', 'v' }, desc = 'Yank git link' },
       { '<leader>gY', '<cmd>GitLink!<cr>', mode = { 'n', 'v' }, desc = 'Open git link' },
     },
   },
@@ -101,4 +101,22 @@ return {
       { 'stevearc/dressing.nvim' }, -- optional: to have the same UI shown in the GIF
     },
   },
+  {
+    "theprimeagen/harpoon",
+    branch = "harpoon2",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("harpoon"):setup()
+    end,
+    keys = {
+      { "<leader>H", function() require("harpoon"):list():add() end, desc = "harpoon file", },
+      { "<leader>h", function() local harpoon = require("harpoon") harpoon.ui:toggle_quick_menu(harpoon:list()) end, desc = "harpoon quick menu", },
+      { "<leader>1", function() require("harpoon"):list():select(1) end, desc = "harpoon to file 1", },
+      { "<leader>2", function() require("harpoon"):list():select(2) end, desc = "harpoon to file 2", },
+      { "<leader>3", function() require("harpoon"):list():select(3) end, desc = "harpoon to file 3", },
+      { "<leader>4", function() require("harpoon"):list():select(4) end, desc = "harpoon to file 4", },
+      { "<leader>5", function() require("harpoon"):list():select(5) end, desc = "harpoon to file 5", },
+    },
+  },
+
 }
