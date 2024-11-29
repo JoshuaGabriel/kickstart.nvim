@@ -110,7 +110,7 @@ vim.opt.mouse = 'a'
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
 vim.api.nvim_set_keymap('n', '<leader>F', '<cmd>lua vim.lsp.buf.format()<CR>', { noremap = true, silent = true })
-
+vim.api.nvim_set_keymap('n', '<leader>E', '<cmd>Explore<CR>', { noremap = true, silent=true})
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
@@ -459,6 +459,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>sc', builtin.lsp_document_symbols, { desc = '[S]earch do[c]ument symbols' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -653,7 +654,16 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        clangd = {},
+        clangd = {
+          cmd = { "clangd", "--background-index", "-j=62", "--malloc-trim", "--pch-storage=memory" },
+          root_dir = require('lspconfig.util').root_pattern('compile_commands.json', '.git'),
+          settings = {
+            clangd = {
+              compilationDatabasePath = "./build", -- Path where compile_commands.json is located
+              fallbackFlags = { "-std=c++17" },    -- Add any fallback flags you want
+            },
+          },
+        },
         gopls = {},
         pyright = {
           settings = {
