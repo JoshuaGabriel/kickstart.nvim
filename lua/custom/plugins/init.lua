@@ -11,7 +11,13 @@ return {
     version = false, -- set this if you want to always pull the latest change
     opts = {
       provider = 'copilot',
+      copilot = {
+        model = "claude-3.5-sonnet",
+      },
       auto_suggestions_provider = 'copilot',
+      behaviour = {
+        auto_suggestions = false, -- Experimental stage
+      },
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
     build = 'make',
@@ -109,8 +115,15 @@ return {
       require("harpoon"):setup()
     end,
     keys = {
-      { "<leader>H", function() require("harpoon"):list():add() end, desc = "harpoon file", },
-      { "<leader>h", function() local harpoon = require("harpoon") harpoon.ui:toggle_quick_menu(harpoon:list()) end, desc = "harpoon quick menu", },
+      { "<leader>H", function() require("harpoon"):list():add() end,     desc = "harpoon file", },
+      {
+        "<leader>h",
+        function()
+          local harpoon = require("harpoon")
+          harpoon.ui:toggle_quick_menu(harpoon:list())
+        end,
+        desc = "harpoon quick menu",
+      },
       { "<leader>1", function() require("harpoon"):list():select(1) end, desc = "harpoon to file 1", },
       { "<leader>2", function() require("harpoon"):list():select(2) end, desc = "harpoon to file 2", },
       { "<leader>3", function() require("harpoon"):list():select(3) end, desc = "harpoon to file 3", },
@@ -118,5 +131,43 @@ return {
       { "<leader>5", function() require("harpoon"):list():select(5) end, desc = "harpoon to file 5", },
     },
   },
-
+  -- {
+  --   'kevinhwang91/nvim-ufo',
+  --   dependencies = { 'kevinhwang91/promise-async' },
+  --   event = 'VeryLazy',
+  --   config = function()
+  --     -- Global folding options
+  --     vim.o.foldcolumn = '1'
+  --     vim.o.foldlevel = 99
+  --     vim.o.foldlevelstart = 99
+  --     vim.o.foldenable = true
+  --
+  --     -- Keymaps for opening/closing all folds
+  --     vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
+  --     vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
+  --
+  --     -- Setup ufo with treesitter and indent providers
+  --     require('ufo').setup({
+  --       provider_selector = function(bufnr, filetype, buftype)
+  --         return { 'treesitter', 'indent' }
+  --       end,
+  --       -- Optional: Configure preview for folds
+  --       preview = {
+  --         win_config = {
+  --           border = { '', '─', '', '', '', '─', '', '' },
+  --           winhighlight = 'Normal:Folded',
+  --           winblend = 0
+  --         }
+  --       }
+  --     })
+  --   end
+  -- },
+  {
+  "gbprod/yanky.nvim",
+  opts = {
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+  },
+}
 }

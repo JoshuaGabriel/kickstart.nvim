@@ -107,10 +107,16 @@ vim.opt.number = true
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
 
+vim.opt.tabstop = 4        -- Tab width = 4 spaces
+vim.opt.shiftwidth = 4     -- Indentation width = 4 spaces
+vim.opt.softtabstop = 4    -- Backspace deletes 4 spaces
+vim.opt.expandtab = true   -- Convert tabs to spaces
+
+
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
 vim.api.nvim_set_keymap('n', '<leader>F', '<cmd>lua vim.lsp.buf.format()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>E', '<cmd>Explore<CR>', { noremap = true, silent=true})
+vim.api.nvim_set_keymap('n', '<leader>E', '<cmd>Explore<CR>', { noremap = true, silent = true })
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
@@ -204,7 +210,9 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
-
+vim.keymap.set("n", "<leader>Y", "<cmd>Telescope yank_history<CR>", { noremap = true, silent = true, desc = "Open Yank History in Telescope" })
+vim.keymap.set({"n","x"}, "p", "<Plug>(YankyPutAfter)")
+vim.keymap.set({"n","x"}, "P", "<Plug>(YankyPutBefore)")
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
@@ -227,6 +235,11 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+-- Split window vertically
+vim.keymap.set('n', '<C-w>%', '<C-w>v', { desc = 'Split window Vertically' })
+vim.keymap.set('n', '<C-w>"', '<C-w>s', { desc = 'Split window Horizontally' })
+
 
 vim.keymap.set({ 'n', 'v' }, '<leader>mm', '<cmd>BookmarksMark<cr>',
   { desc = 'Mark current line into active BookmarkList.' })
@@ -293,6 +306,7 @@ require('lazy').setup({
   -- See `:help gitsigns` to understand what the configuration keys do
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
+    commit = "9b36d497495436c135659902054ee637e0ba6021",
     opts = {
       signs = {
         add = { text = '+' },
@@ -654,7 +668,7 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        clangd = {
+        clangd        = {
           cmd = { "clangd", "--background-index", "-j=62", "--malloc-trim", "--pch-storage=memory" },
           root_dir = require('lspconfig.util').root_pattern('compile_commands.json', '.git'),
           settings = {
@@ -664,8 +678,8 @@ require('lazy').setup({
             },
           },
         },
-        gopls = {},
-        pyright = {
+        gopls         = {},
+        pyright       = {
           settings = {
             python = {
               analysis = {
@@ -677,7 +691,13 @@ require('lazy').setup({
           },
         },
         -- ruff_lsp = {},
-        -- rust_analyzer = {},
+        astro         = {},
+        ts_ls         = {},
+        html          = {},
+        cssls         = {},
+        tailwindcss   = {},
+
+        rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -686,8 +706,8 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
-        bashls = {},
-        lua_ls = {
+        bashls        = {},
+        lua_ls        = {
           -- cmd = {...},
           -- filetypes = { ...},
           -- capabilities = {},
@@ -776,6 +796,49 @@ require('lazy').setup({
   --     },
   --   },
   -- },
+  --
+  -- Formatting configuration with `conform.nvim`
+  -- {
+  --   'stevearc/conform.nvim',
+  --   event = { 'BufReadPre' },
+  --   cmd = { 'ConformInfo' },
+  --   keys = {
+  --     {
+  --       '<leader>f', -- Format the entire buffer
+  --       function()
+  --         require('conform').format { async = true, lsp_format = 'fallback' }
+  --       end,
+  --       mode = '',
+  --       desc = '[F]ormat buffer',
+  --     },
+  --     {
+  --       '<leader>sf', -- Format selected text
+  --       function()
+  --         local conform = require('conform')
+  --         local start_row, _, end_row, _ = unpack(vim.fn.getpos("'<"))
+  --         conform.format({
+  --           async = true,
+  --           lsp_format = 'fallback',
+  --           range = {
+  --             start = { start_row, 0 },
+  --             ['end'] = { end_row + 1, 0 }, -- End row is inclusive, adjust as needed
+  --           },
+  --         })
+  --       end,
+  --       mode = 'v', -- Visual mode keybinding
+  --       desc = '[F]ormat [S]election',
+  --     },
+  --   },
+  --   opts = {
+  --     notify_on_error = false,
+  --     format_on_save = false, -- Disable autoformat on save
+  --     formatters_by_ft = {
+  --       lua = { 'stylua' },
+  --       rust = { 'rustfmt' }, -- Specify rustfmt for Rust files
+  --     },
+  --   },
+  -- },
+  --
 
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
@@ -1020,6 +1083,7 @@ require('lazy').setup({
     },
   },
 })
+
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
