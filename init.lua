@@ -239,6 +239,12 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- Split window vertically
 vim.keymap.set('n', '<C-w>%', '<C-w>v', { desc = 'Split window Vertically' })
 vim.keymap.set('n', '<C-w>"', '<C-w>s', { desc = 'Split window Horizontally' })
+-- Resize window using arrow keys, increasing/decreasing by 5
+vim.keymap.set("n", "<C-w>+", "<Cmd>resize +10<CR>", { noremap = true, silent = true, desc = "Increase Height" })
+vim.keymap.set("n", "<C-w><", "<Cmd>vertical resize -13<CR>", { noremap = true, silent = true, desc = "Decrease Width" })
+vim.keymap.set("n", "<C-w>>", "<Cmd>vertical resize +13<CR>", { noremap = true, silent = true, desc = "Increase Width" })
+vim.keymap.set("n", "<C-w>_", "<Cmd>resize -10<CR>", { noremap = true, silent = true, desc = "Decrease Height" })
+vim.keymap.set("n", "<C-w>-", "<Cmd>resize 9999<CR>", { noremap = true, silent = true, desc = "Maximize Height" })
 
 
 vim.keymap.set({ 'n', 'v' }, '<leader>mm', '<cmd>BookmarksMark<cr>',
