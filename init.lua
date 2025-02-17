@@ -116,7 +116,7 @@ vim.opt.expandtab = true   -- Convert tabs to spaces
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
 vim.api.nvim_set_keymap('n', '<leader>F', '<cmd>lua vim.lsp.buf.format()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>E', '<cmd>Explore<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<leader>E', '<cmd>Explore<CR>', { noremap = true, silent = true })
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
@@ -131,17 +131,33 @@ end)
 --   end
 -- end
 
+
+-- OLD
+-- vim.g.clipboard = {
+--   name = 'OSC 52',
+--   copy = {
+--     ['+'] = require('vim.ui.clipboard.osc52').copy '+',
+--     ['*'] = require('vim.ui.clipboard.osc52').copy '*',
+--   },
+--   paste = {
+--     ['+'] = require('vim.ui.clipboard.osc52').paste '+',
+--     ['*'] = require('vim.ui.clipboard.osc52').paste '*',
+--   },
+-- }
+
 vim.g.clipboard = {
-  name = 'OSC 52',
+  name = "OSC 52",
   copy = {
-    ['+'] = require('vim.ui.clipboard.osc52').copy '+',
-    ['*'] = require('vim.ui.clipboard.osc52').copy '*',
+    ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+    ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
   },
   paste = {
-    ['+'] = require('vim.ui.clipboard.osc52').paste '+',
-    ['*'] = require('vim.ui.clipboard.osc52').paste '*',
+    ["+"] = paste,
+    ["*"] = paste,
   },
 }
+
+
 if vim.env.TMUX ~= nil then
   local copy = { 'tmux', 'load-buffer', '-w', '-' }
   local paste = { 'bash', '-c', 'tmux refresh-client -l && sleep 0.05 && tmux save-buffer -' }
@@ -184,6 +200,9 @@ vim.opt.splitright = true
 vim.opt.splitbelow = true
 
 
+-- require("oil").setup()
+vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+vim.keymap.set("n", "<leader>E", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`

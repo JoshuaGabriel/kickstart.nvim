@@ -7,7 +7,7 @@ return {
   {
     'yetone/avante.nvim',
     event = 'VeryLazy',
-    lazy = false,
+    lazy = true,
     version = false, -- set this if you want to always pull the latest change
     opts = {
       provider = 'copilot',
@@ -131,43 +131,118 @@ return {
       { "<leader>5", function() require("harpoon"):list():select(5) end, desc = "harpoon to file 5", },
     },
   },
-  -- {
-  --   'kevinhwang91/nvim-ufo',
-  --   dependencies = { 'kevinhwang91/promise-async' },
-  --   event = 'VeryLazy',
-  --   config = function()
-  --     -- Global folding options
-  --     vim.o.foldcolumn = '1'
-  --     vim.o.foldlevel = 99
-  --     vim.o.foldlevelstart = 99
-  --     vim.o.foldenable = true
-  --
-  --     -- Keymaps for opening/closing all folds
-  --     vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
-  --     vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
-  --
-  --     -- Setup ufo with treesitter and indent providers
-  --     require('ufo').setup({
-  --       provider_selector = function(bufnr, filetype, buftype)
-  --         return { 'treesitter', 'indent' }
-  --       end,
-  --       -- Optional: Configure preview for folds
-  --       preview = {
-  --         win_config = {
-  --           border = { '', '─', '', '', '', '─', '', '' },
-  --           winhighlight = 'Normal:Folded',
-  --           winblend = 0
-  --         }
-  --       }
-  --     })
-  --   end
-  -- },
   {
-  "gbprod/yanky.nvim",
-  opts = {
-    -- your configuration comes here
-    -- or leave it empty to use the default settings
-    -- refer to the configuration section below
+    'kevinhwang91/nvim-ufo',
+    dependencies = { 'kevinhwang91/promise-async' },
+    event = 'VeryLazy',
+    config = function()
+      -- Global folding options
+      vim.o.foldcolumn = '1'
+      vim.o.foldlevel = 99
+      vim.o.foldlevelstart = 99
+      vim.o.foldenable = true
+
+      -- Keymaps for opening/closing all folds
+      vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
+      vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
+
+      -- Setup ufo with treesitter and indent providers
+      require('ufo').setup({
+        provider_selector = function(bufnr, filetype, buftype)
+          return { 'treesitter', 'indent' }
+        end,
+        -- Optional: Configure preview for folds
+        preview = {
+          win_config = {
+            border = { '', '─', '', '', '', '─', '', '' },
+            winhighlight = 'Normal:Folded',
+            winblend = 0
+          }
+        }
+      })
+    end
   },
-}
+  {
+    "gbprod/yanky.nvim",
+    opts = {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      sync_with_numbered_registers = false,
+      system_clipboard = {
+        sync_with_ring = false,
+        clipboard_register = nil,
+      },
+    },
+  },
+  {
+    'stevearc/oil.nvim',
+    ---@module 'oil'
+    ---@type oil.SetupOpts
+    opts = {},
+    -- Optional dependencies
+    dependencies = { { "echasnovski/mini.icons", opts = {} } },
+    -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if you prefer nvim-web-devicons
+    -- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
+    lazy = false,
+  },
+  {
+    "folke/trouble.nvim",
+    opts = {}, -- for default options, refer to the configuration section for custom setup.
+    cmd = "Trouble",
+    keys = {
+      {
+        "<leader>xx",
+        "<cmd>Trouble diagnostics toggle<cr>",
+        desc = "Diagnostics (Trouble)",
+      },
+      {
+        "<leader>xX",
+        "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+        desc = "Buffer Diagnostics (Trouble)",
+      },
+      {
+        "<leader>cs",
+        "<cmd>Trouble symbols toggle focus=false<cr>",
+        desc = "Symbols (Trouble)",
+      },
+      {
+        "<leader>cl",
+        "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+        desc = "LSP Definitions / references / ... (Trouble)",
+      },
+      {
+        "<leader>xL",
+        "<cmd>Trouble loclist toggle<cr>",
+        desc = "Location List (Trouble)",
+      },
+      {
+        "<leader>xQ",
+        "<cmd>Trouble qflist toggle<cr>",
+        desc = "Quickfix List (Trouble)",
+      },
+    },
+  },
+  {
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    ---@type snacks.Config
+    opts = {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
+      bigfile = { enabled = true },
+      dashboard = { enabled = true },
+      explorer = { enabled = true },
+      indent = { enabled = true },
+      input = { enabled = true },
+      picker = { enabled = true },
+      notifier = { enabled = true },
+      quickfile = { enabled = true },
+      scope = { enabled = true },
+      scroll = { enabled = true },
+      statuscolumn = { enabled = true },
+      words = { enabled = true },
+    },
+  }
 }
