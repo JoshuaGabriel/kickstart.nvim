@@ -107,10 +107,10 @@ vim.opt.number = true
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
 
-vim.opt.tabstop = 4        -- Tab width = 4 spaces
-vim.opt.shiftwidth = 4     -- Indentation width = 4 spaces
-vim.opt.softtabstop = 4    -- Backspace deletes 4 spaces
-vim.opt.expandtab = true   -- Convert tabs to spaces
+vim.opt.tabstop = 4      -- Tab width = 4 spaces
+vim.opt.shiftwidth = 4   -- Indentation width = 4 spaces
+vim.opt.softtabstop = 4  -- Backspace deletes 4 spaces
+vim.opt.expandtab = true -- Convert tabs to spaces
 
 
 -- Don't show the mode, since it's already in the status line
@@ -229,9 +229,10 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
-vim.keymap.set("n", "<leader>Y", "<cmd>Telescope yank_history<CR>", { noremap = true, silent = true, desc = "Open Yank History in Telescope" })
-vim.keymap.set({"n","x"}, "p", "<Plug>(YankyPutAfter)")
-vim.keymap.set({"n","x"}, "P", "<Plug>(YankyPutBefore)")
+vim.keymap.set("n", "<leader>Y", "<cmd>Telescope yank_history<CR>",
+  { noremap = true, silent = true, desc = "Open Yank History in Telescope" })
+vim.keymap.set({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
+vim.keymap.set({ "n", "x" }, "P", "<Plug>(YankyPutBefore)")
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
@@ -999,8 +1000,12 @@ require('lazy').setup({
     end,
   },
 
+  { "catppuccin/nvim",          name = "catppuccin", priority = 1000 },
+  { "sainnhe/everforest",          name = "everforest", priority = 1000 },
+
+
   -- Highlight todo, notes, etc in comments
-  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
+  { 'folke/todo-comments.nvim', event = 'VimEnter',  dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',

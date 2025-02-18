@@ -235,14 +235,14 @@ return {
       dashboard = { enabled = true },
       explorer = { enabled = true },
       indent = { enabled = true },
-      input = { enabled = true },
+      input = { enabled = false },
       picker = { enabled = true },
       notifier = { enabled = true },
       quickfile = { enabled = true },
       scope = { enabled = true },
-      scroll = { enabled = true },
+      scroll = { enabled = false},
       statuscolumn = { enabled = true },
-      words = { enabled = true },
+      words = { enabled = false},
     },
   }
 }
