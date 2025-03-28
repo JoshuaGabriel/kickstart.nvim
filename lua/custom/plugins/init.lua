@@ -12,7 +12,7 @@ return {
     opts = {
       provider = 'copilot',
       copilot = {
-        model = "claude-3.5-sonnet",
+        model = "claude-3.7-sonnet",
       },
       auto_suggestions_provider = 'copilot',
       behaviour = {
@@ -178,7 +178,11 @@ return {
     'stevearc/oil.nvim',
     ---@module 'oil'
     ---@type oil.SetupOpts
-    opts = {},
+    opts = {
+      view_options = {
+        show_hidden = true,
+      },
+    },
     -- Optional dependencies
     dependencies = { { "echasnovski/mini.icons", opts = {} } },
     -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if you prefer nvim-web-devicons
@@ -240,9 +244,24 @@ return {
       notifier = { enabled = true },
       quickfile = { enabled = true },
       scope = { enabled = true },
-      scroll = { enabled = false},
+      scroll = { enabled = false },
       statuscolumn = { enabled = true },
-      words = { enabled = false},
+      words = { enabled = false },
+    },
+  },
+  {
+    "sindrets/diffview.nvim",
+    enhanced_diff_hl = true,   -- Enable enhanced diff highlighting
+    use_icons = true,
+    default = {
+      layout = "diff2_horizontal", -- Start with a horizontal split
+      winbar_info = false,       -- Disable winbar to reduce clutter
+    },
+    keymaps = {
+      view = {
+        -- Add a custom keymap to focus on one file
+        { "n", "<leader>gf", "<cmd>DiffviewFocusFiles<cr>", { desc = "Focus on single file" } },
+      },
     },
   }
 }
