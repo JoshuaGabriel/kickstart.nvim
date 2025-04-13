@@ -11,11 +11,14 @@ vim.opt.tabstop = 4      -- Tab width = 4 spaces
 vim.opt.shiftwidth = 4   -- Indentation width = 4 spaces
 vim.opt.softtabstop = 4  -- Backspace deletes 4 spaces
 vim.opt.expandtab = true -- Convert tabs to spaces
+-- let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g ""'
 
 
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
 vim.api.nvim_set_keymap('n', '<leader>F', '<cmd>lua vim.lsp.buf.format()<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<leader>pf', '<cmd>lua require("null-ls").formatting.black()<CR>', { noremap = true, silent = true, desc = 'Format Python with Black' })
+
 
 vim.schedule(function()
   vim.opt.clipboard = 'unnamedplus'
@@ -23,19 +26,22 @@ end)
 
 function ViewBranchChanges()
   vim.ui.input(
-  { prompt = 'Enter branch name (default: current): ', default = vim.fn.system('git rev-parse --abbrev-ref HEAD'):gsub(
-  '\n', '') }, function(branch)
-    if not branch or branch == '' then return end
+    {
+      prompt = 'Enter branch name (default: current): ',
+      default = vim.fn.system('git rev-parse --abbrev-ref HEAD'):gsub(
+        '\n', '')
+    }, function(branch)
+      if not branch or branch == '' then return end
 
-    local base = vim.fn.system('git merge-base ' .. branch .. ' upstream/main'):gsub('\n', '')
-    if base == '' then
-      print("Could not determine base commit.")
-      return
-    end
+      local base = vim.fn.system('git merge-base ' .. branch .. ' upstream/main'):gsub('\n', '')
+      if base == '' then
+        print("Could not determine base commit.")
+        return
+      end
 
-    print("Files changed in " .. branch .. ":")
-    vim.cmd('!git diff --name-only ' .. base .. ' ' .. branch)
-  end)
+      print("Files changed in " .. branch .. ":")
+      vim.cmd('!git diff --name-only ' .. base .. ' ' .. branch)
+    end)
 end
 
 vim.g.clipboard = {
@@ -151,7 +157,7 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   'tpope/vim-sleuth',
 
-  { 
+  {
     'lewis6991/gitsigns.nvim',
     commit = "9b36d497495436c135659902054ee637e0ba6021",
     opts = {
@@ -165,9 +171,9 @@ require('lazy').setup({
     },
   },
 
-  {                     
+  {
     'folke/which-key.nvim',
-    event = 'VimEnter', 
+    event = 'VimEnter',
     opts = {
       icons = {
         mappings = vim.g.have_nerd_font,
@@ -215,13 +221,13 @@ require('lazy').setup({
     },
   },
 
-  { 
+  {
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
     branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
-      { 
+      {
         'nvim-telescope/telescope-fzf-native.nvim',
 
         build = 'make',
@@ -288,11 +294,11 @@ require('lazy').setup({
       },
     },
   },
-  { 'Bilal2453/luvit-meta',     lazy = true },
+  { 'Bilal2453/luvit-meta', lazy = true },
   {
     'neovim/nvim-lspconfig',
     dependencies = {
-      { 'williamboman/mason.nvim', config = true, PATH="append" }, 
+      { 'williamboman/mason.nvim', config = true, PATH = "append" },
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
@@ -368,15 +374,28 @@ require('lazy').setup({
           root_dir = require('lspconfig.util').root_pattern('compile_commands.json', '.git'),
           settings = {
             clangd = {
-              compilationDatabasePath = "./build", 
-              fallbackFlags = { "-std=c++20" },    
+              compilationDatabasePath = "./build",
+              fallbackFlags = { "-std=c++20" },
             },
           },
         },
         gopls         = {},
-        ocamllsp = {}, 
-        pyright ={},
-        -- pylsp = {},
+        ocamllsp      = {},
+        pyright       = {},
+        -- pylsp         = {},
+        -- pylsp         = {
+        --   settings = {
+        --     pylsp = {
+        --       plugins = {
+        --         pycodestyle = {
+        --           ignore = { 'E501' }, -- Ignore line-length warnings
+        --           maxLineLength = 88,  -- Optional: Set to match Black, though ignored if E501 is in ignore
+        --         },
+        --         pyflakes = {},         -- Keep pyflakes enabled with defaults
+        --       },
+        --     },
+        --   },
+        -- },
         html          = {},
         cssls         = {},
         -- tailwindcss   = {},
@@ -410,7 +429,9 @@ require('lazy').setup({
 
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', 
+        'stylua',
+        'flake8',
+        'black',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -426,7 +447,7 @@ require('lazy').setup({
     end,
   },
 
-  { 
+  {
     'hrsh7th/nvim-cmp',
     event = 'InsertEnter',
     dependencies = {
@@ -494,9 +515,9 @@ require('lazy').setup({
     end,
   },
 
-  { 
+  {
     'folke/tokyonight.nvim',
-    priority = 1000, 
+    priority = 1000,
     init = function()
       vim.cmd.colorscheme 'tokyonight-night'
 
@@ -504,12 +525,22 @@ require('lazy').setup({
     end,
   },
 
-  { "catppuccin/nvim",          name = "catppuccin", priority = 1000 },
-  { "sainnhe/everforest",       name = "everforest", priority = 1000 },
+  { "catppuccin/nvim",      name = "catppuccin", priority = 1000 },
+  { "sainnhe/everforest",   name = "everforest", priority = 1000 },
+  {
+    "EdenEast/nightfox.nvim",
+    name = "nightfox",
+    priority = 999,
+    init = function()
+      -- vim.cmd.colorscheme 'dayfox'
 
-  { 'folke/todo-comments.nvim', event = 'VimEnter',  dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
+      vim.cmd.hi 'Comment gui=none'
+    end,
+  },
 
-  { 
+  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
+
+  {
     'echasnovski/mini.nvim',
     config = function()
       require('mini.ai').setup { n_lines = 500 }
@@ -524,10 +555,10 @@ require('lazy').setup({
       end
     end,
   },
-  { 
+  {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
-    main = 'nvim-treesitter.configs', 
+    main = 'nvim-treesitter.configs',
     opts = {
       ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
       auto_install = true,

@@ -12,7 +12,7 @@ return {
     opts = {
       provider = 'copilot',
       copilot = {
-        model = "claude-3.7-sonnet",
+        model = "gemini-2.0-flash-001",
       },
       auto_suggestions_provider = 'copilot',
       behaviour = {
@@ -251,11 +251,11 @@ return {
   },
   {
     "sindrets/diffview.nvim",
-    enhanced_diff_hl = true,   -- Enable enhanced diff highlighting
+    enhanced_diff_hl = true, -- Enable enhanced diff highlighting
     use_icons = true,
     default = {
       layout = "diff2_horizontal", -- Start with a horizontal split
-      winbar_info = false,       -- Disable winbar to reduce clutter
+      winbar_info = false,         -- Disable winbar to reduce clutter
     },
     keymaps = {
       view = {
@@ -263,5 +263,17 @@ return {
         { "n", "<leader>gf", "<cmd>DiffviewFocusFiles<cr>", { desc = "Focus on single file" } },
       },
     },
-  }
+  },
+  {
+    "CopilotC-Nvim/CopilotChat.nvim",
+    dependencies = {
+      { "github/copilot.vim" },                       -- or zbirenbaum/copilot.lua
+      { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
+    },
+    build = "make tiktoken",                          -- Only on MacOS or Linux
+    opts = {
+      -- See Configuration section for options
+    },
+    -- See Commands section for default commands if you want to lazy load on them
+  },
 }
