@@ -381,7 +381,10 @@ require('lazy').setup({
         },
         gopls         = {},
         ocamllsp      = {},
-        pyright       = {},
+        -- pyright       = {},
+        basedpyright  = {},
+        ruff          = {},
+        perlnavigator = {},
         -- pylsp         = {},
         -- pylsp         = {
         --   settings = {

@@ -12,7 +12,7 @@ return {
     opts = {
       provider = 'copilot',
       copilot = {
-        model = "gemini-2.0-flash-001",
+        model = "gemini-2.5-pro",
       },
       auto_suggestions_provider = 'copilot',
       behaviour = {
@@ -66,34 +66,24 @@ return {
       require('leap').add_default_mappings()
     end,
   },
-  -- {
-  --   'ruifm/gitlinker.nvim',
-  --   dependencies = {
-  --     {
-  --       'nvim-lua/plenary.nvim',
-  --     },
-  --   },
-  --   config = function()
-  --     require('gitlinker').setup {
-  --       opts = {
-  --         -- Opens the URL in your default browser
-  --         action_callback = require('gitlinker.actions').open_in_browser,
-  --         add_current_line_on_normal_mode = true,
-  --         git_command = 'git rev-parse HEAD',
-  --         -- Add current line number to URL in normal mode
-  --         print_url = true,
-  --       },
-  --       -- mappings = nil, -- Disable default mappings
-  --     }
-  --
-  --     -- Set up a custom key mapping (optional)
-  --     -- vim.api.nvim_set_keymap('n', '<leader>gy', "<cmd>lua require'gitlinker'.get_buf_range_url('n')<CR>", { silent = true, noremap = true })
-  --   end,
-  -- },
   {
     'linrongbin16/gitlinker.nvim',
     cmd = 'GitLink',
-    opts = {},
+    opts = {
+      -- router = {
+      --   browse = {
+      --     -- Replace with your actual GitHub Enterprise host pattern
+      --     -- The key is a Lua pattern (regex). '%.' escapes the dot.
+      --     ["^gitlab%.clyso%.com"] = require('gitlinker.routers').gitlab_blame,
+      --     -- You can add other custom hosts here too:
+      --     -- ["^gitlab%.mycompany%.com"] = require('gitlinker.routers').gitlab_browse,
+      --   },
+      --   blame = {
+      --     ["^gitlab%.clsyo%.com"] = require('gitlinker.routers').gitlab_blame,
+      --     -- ["^gitlab%.mycompany%.com"] = require('gitlinker.routers').gitlab_blame,
+      --   },
+      -- }
+    },
     keys = {
       { '<leader>gy', '<cmd>GitLink<cr>',  mode = { 'n', 'v' }, desc = 'Yank git link' },
       { '<leader>gY', '<cmd>GitLink!<cr>', mode = { 'n', 'v' }, desc = 'Open git link' },
@@ -264,16 +254,17 @@ return {
       },
     },
   },
-  {
-    "CopilotC-Nvim/CopilotChat.nvim",
-    dependencies = {
-      { "github/copilot.vim" },                       -- or zbirenbaum/copilot.lua
-      { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
-    },
-    build = "make tiktoken",                          -- Only on MacOS or Linux
-    opts = {
-      -- See Configuration section for options
-    },
-    -- See Commands section for default commands if you want to lazy load on them
-  },
+  -- {
+  --   "CopilotC-Nvim/CopilotChat.nvim",
+  --   dependencies = {
+  --     { "github/copilot.vim" },                       -- or zbirenbaum/copilot.lua
+  --     { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
+  --   },
+  --   build = "make tiktoken",                          -- Only on MacOS or Linux
+  --   opts = {
+  --     -- See Configuration section for options
+  --     model = 'claude-3.5-sonnet',
+  --   },
+  --   -- See Commands section for default commands if you want to lazy load on them
+  -- },
 }
