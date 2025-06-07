@@ -380,11 +380,11 @@ require('lazy').setup({
           },
         },
         gopls         = {},
-        ocamllsp      = {},
+        -- ocamllsp      = {},
         -- pyright       = {},
         basedpyright  = {},
         ruff          = {},
-        perlnavigator = {},
+        -- perlnavigator = {},
         -- pylsp         = {},
         -- pylsp         = {
         --   settings = {
@@ -403,19 +403,19 @@ require('lazy').setup({
         cssls         = {},
         -- tailwindcss   = {},
 
-        rust_analyzer = {
-          cmd = vim.lsp.rpc.connect("127.0.0.1", 27631),
-          settings = {
-            ["rust-analyzer"] = {
-              lspMux = {
-                version = "1",
-                method = "connect",
-                server = "rust-analyzer",
-              },
-            },
-          },
-
-        },
+        -- rust_analyzer = {
+        --   cmd = vim.lsp.rpc.connect("127.0.0.1", 27631),
+        --   settings = {
+        --     ["rust-analyzer"] = {
+        --       lspMux = {
+        --         version = "1",
+        --         method = "connect",
+        --         server = "rust-analyzer",
+        --       },
+        --     },
+        --   },
+        --
+        -- },
         bashls        = {},
         lua_ls        = {
           settings = {
@@ -432,8 +432,8 @@ require('lazy').setup({
 
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua',
-        'flake8',
+        -- 'stylua',
+        -- 'flake8',
         'black',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
