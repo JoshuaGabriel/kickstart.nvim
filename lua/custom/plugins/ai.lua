@@ -2,16 +2,20 @@ return {
     {
         'yetone/avante.nvim',
         event = 'VeryLazy',
-        lazy = true,
         version = false, -- set this if you want to always pull the latest change
+        tag = "v0.0.24",
         opts = {
             provider = 'copilot',
-            copilot = {
-                model = "gemini-2.5-pro",
-            },
-            auto_suggestions_provider = 'copilot',
-            behaviour = {
-                auto_suggestions = false, -- Experimental stage
+            providers = {
+                copilot = {
+                    -- model = "gemini-2.5-pro",
+                    model = "claude-sonnet-4",
+                },
+                reasoning_effort = "high",
+                auto_suggestions_provider = 'copilot',
+                behaviour = {
+                    auto_suggestions = false, -- Experimental stage
+                },
             },
         },
         -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
@@ -59,19 +63,25 @@ return {
     },
 
     {
-        "CopilotC-Nvim/CopilotChat.nvim",
-        dependencies = {
-            { "github/copilot.vim" },                 -- or zbirenbaum/copilot.lua
-            { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
-        },
-        build = "make tiktoken",                      -- Only on MacOS or Linux
-        opts = {
-            -- See Configuration section for options
-            model = 'claude-3.5-sonnet',
-        },
-        -- See Commands section for default commands if you want to lazy load on them
+        'milanglacier/minuet-ai.nvim',
+        config = function()
+            require('minuet').setup {
+                -- Your configuration options here
+            }
+        end,
     },
 
-
-
+    -- {
+    --     "CopilotC-Nvim/CopilotChat.nvim",
+    --     dependencies = {
+    --         { "github/copilot.vim" },                 -- or zbirenbaum/copilot.lua
+    --         { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
+    --     },
+    --     build = "make tiktoken",                      -- Only on MacOS or Linux
+    --     opts = {
+    --         -- See Configuration section for options
+    --         model = 'claude-sonnet-4',
+    --     },
+    --     -- See Commands section for default commands if you want to lazy load on them
+    -- },
 }
