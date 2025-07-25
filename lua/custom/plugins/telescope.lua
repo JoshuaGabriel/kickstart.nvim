@@ -109,6 +109,39 @@ return {
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
       vim.keymap.set('n', '<leader>sc', builtin.lsp_document_symbols, { desc = '[S]earch do[c]ument symbols' })
 
+      vim.keymap.set('n', '<leader>sl', function()
+        -- Check if we're in Oil
+        if vim.bo.filetype == 'oil' then
+          local oil = require('oil')
+          local oil_dir = oil.get_current_dir()
+          if oil_dir then
+            builtin.live_grep {
+              cwd = oil_dir,
+              prompt_title = 'Live Grep in ' .. vim.fn.fnamemodify(oil_dir, ':t')
+            }
+          else
+            -- Fallback if oil dir can't be determined
+            builtin.live_grep {
+              cwd = vim.fn.getcwd(),
+              prompt_title = 'Live Grep in ' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+            }
+          end
+        else
+          -- Normal behavior for non-oil buffers
+          builtin.live_grep {
+            cwd = vim.fn.expand('%:p:h'),
+            prompt_title = 'Live Grep in ' .. vim.fn.fnamemodify(vim.fn.expand('%:p:h'), ':t')
+          }
+        end
+      end, { desc = '[S]earch [L]ocal directory' })
+
+      vim.keymap.set('n', '<leader>so', function()
+        builtin.find_files {
+          cwd = vim.fn.expand('%:p:h'),
+          prompt_title = 'Find Files in ' .. vim.fn.fnamemodify(vim.fn.expand('%:p:h'), ':t')
+        }
+      end, { desc = '[S]earch files L[O]cally' })
+
       vim.keymap.set('n', '<leader>/', function()
         builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
           winblend = 10,
