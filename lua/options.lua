@@ -17,6 +17,7 @@ vim.opt.expandtab = true -- Convert tabs to spaces
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
 vim.api.nvim_set_keymap('n', '<leader>F', '<cmd>lua vim.lsp.buf.format()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<leader>F', '<cmd>lua vim.lsp.buf.format()<CR>', { noremap = true, silent = true })
 -- vim.api.nvim_set_keymap('n', '<leader>pf', '<cmd>lua require("null-ls").formatting.black()<CR>', { noremap = true, silent = true, desc = 'Format Python with Black' })
 
 
