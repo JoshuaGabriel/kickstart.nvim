@@ -4,68 +4,68 @@
 -- See the kickstart.nvim README for more information
 return {
 
-  {
-    'yetone/avante.nvim',
-    event = 'VeryLazy',
-    lazy = true,
-    version = false, -- set this if you want to always pull the latest change
-    opts = {
-      provider = 'copilot',
-      copilot = {
-        model = "gemini-2.5-pro",
-      },
-      auto_suggestions_provider = 'copilot',
-      behaviour = {
-        auto_suggestions = false, -- Experimental stage
-      },
-    },
-    -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-    build = 'make',
-    -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter',
-      'stevearc/dressing.nvim',
-      'nvim-lua/plenary.nvim',
-      'MunifTanjim/nui.nvim',
-      --- The below dependencies are optional,
-      'nvim-tree/nvim-web-devicons', -- or echasnovski/mini.icons
-      {
-        'zbirenbaum/copilot.lua',
-        opts = {},
-      }, -- for providers='copilot'
-      {
-        -- support for image pasting
-        'HakonHarnes/img-clip.nvim',
-        event = 'VeryLazy',
-        opts = {
-          -- recommended settings
-          default = {
-            embed_image_as_base64 = false,
-            prompt_for_file_name = false,
-            drag_and_drop = {
-              insert_mode = true,
-            },
-            -- required for Windows users
-            use_absolute_path = true,
-          },
-        },
-      },
-      {
-        -- Make sure to set this up properly if you have lazy=true
-        'MeanderingProgrammer/render-markdown.nvim',
-        opts = {
-          file_types = { 'markdown', 'Avante' },
-        },
-        ft = { 'markdown', 'Avante' },
-      },
-    },
-  },
-  { -- Leap plugin for enhanced navigation
-    'ggandor/leap.nvim',
-    config = function()
-      require('leap').add_default_mappings()
-    end,
-  },
+  -- {
+  --   'yetone/avante.nvim',
+  --   event = 'VeryLazy',
+  --   lazy = true,
+  --   version = false, -- set this if you want to always pull the latest change
+  --   opts = {
+  --     provider = 'copilot',
+  --     copilot = {
+  --       model = "gemini-2.5-pro",
+  --     },
+  --     auto_suggestions_provider = 'copilot',
+  --     behaviour = {
+  --       auto_suggestions = false, -- Experimental stage
+  --     },
+  --   },
+  --   -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+  --   build = 'make',
+  --   -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
+  --   dependencies = {
+  --     'nvim-treesitter/nvim-treesitter',
+  --     'stevearc/dressing.nvim',
+  --     'nvim-lua/plenary.nvim',
+  --     'MunifTanjim/nui.nvim',
+  --     --- The below dependencies are optional,
+  --     'nvim-tree/nvim-web-devicons', -- or echasnovski/mini.icons
+  --     {
+  --       'zbirenbaum/copilot.lua',
+  --       opts = {},
+  --     }, -- for providers='copilot'
+  --     {
+  --       -- support for image pasting
+  --       'HakonHarnes/img-clip.nvim',
+  --       event = 'VeryLazy',
+  --       opts = {
+  --         -- recommended settings
+  --         default = {
+  --           embed_image_as_base64 = false,
+  --           prompt_for_file_name = false,
+  --           drag_and_drop = {
+  --             insert_mode = true,
+  --           },
+  --           -- required for Windows users
+  --           use_absolute_path = true,
+  --         },
+  --       },
+  --     },
+  --     {
+  --       -- Make sure to set this up properly if you have lazy=true
+  --       'MeanderingProgrammer/render-markdown.nvim',
+  --       opts = {
+  --         file_types = { 'markdown', 'Avante' },
+  --       },
+  --       ft = { 'markdown', 'Avante' },
+  --     },
+  --   },
+  -- },
+  -- { -- Leap plugin for enhanced navigation
+  --   'ggandor/leap.nvim',
+  --   config = function()
+  --     require('leap').add_default_mappings()
+  --   end,
+  -- },
   {
     'linrongbin16/gitlinker.nvim',
     cmd = 'GitLink',
@@ -281,4 +281,25 @@ return {
     },
     version = '^1.0.0', -- optional: only update when a new 1.x version is released
   },
+
+  {
+    "pwntester/octo.nvim",
+    cmd = "Octo",
+    event = { { event = "BufReadCmd", pattern = "octo://*" } },
+    config = function()
+      require('octo').setup({
+        use_local_fs = true,
+        enable_builtin = true,
+        default_to_projects_v2 = true,
+        default_merge_method = "squash",
+        picker = "telescope",
+      })
+    end,
+  },
+
+
+  {
+    "tpope/vim-fugitive",
+    lazy = false
+  }
 }
