@@ -4,9 +4,10 @@ vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 
 vim.opt.number = true
-
+vim.g.OmniSharp_server_use_net6 = 1
+vim.g.OmniSharp_highlighting = 0
 vim.opt.mouse = 'a'
-
+vim.opt.relativenumber = true
 vim.opt.tabstop = 4      -- Tab width = 4 spaces
 vim.opt.shiftwidth = 4   -- Indentation width = 4 spaces
 vim.opt.softtabstop = 4  -- Backspace deletes 4 spaces
@@ -369,7 +370,7 @@ require('lazy').setup({
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
       local servers = {
-        clangd        = {
+        clangd       = {
           cmd = { "clangd", "--background-index", "-j=62", "--pch-storage=memory", "--clang-tidy" },
           root_dir = require('lspconfig.util').root_pattern('compile_commands.json', '.git'),
           settings = {
@@ -382,8 +383,8 @@ require('lazy').setup({
         -- gopls         = {},
         -- ocamllsp      = {},
         -- pyright       = {},
-        basedpyright  = {},
-        ruff          = {},
+        basedpyright = {},
+        ruff         = {},
         -- perlnavigator = {},
         -- pylsp         = {},
         -- pylsp         = {
@@ -416,8 +417,12 @@ require('lazy').setup({
         --   },
         --
         -- },
-        bashls        = {},
-        lua_ls        = {
+        omnisharp    = {},
+        -- csharpier    = {},
+        -- netcoredbg   = {},
+        -- fantomas     = {},
+        bashls       = {},
+        lua_ls       = {
           settings = {
             Lua = {
               completion = {
