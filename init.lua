@@ -417,7 +417,7 @@ require('lazy').setup({
         --   },
         --
         -- },
-        omnisharp    = {},
+        -- omnisharp    = {},
         -- csharpier    = {},
         -- netcoredbg   = {},
         -- fantomas     = {},
@@ -433,7 +433,12 @@ require('lazy').setup({
         },
       }
 
-      require('mason').setup()
+      require('mason').setup({
+        registries = {
+          "github:mason-org/mason-registry",
+          "github:Crashdummyy/mason-registry",
+        },
+      })
 
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {

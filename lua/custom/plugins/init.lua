@@ -313,8 +313,60 @@ return {
     priority = 1000,
     config = function()
       require("tiny-inline-diagnostic").setup()
-      vim.diagnostic.config({ virtual_text = false })   -- Disable Neovim's default virtual text diagnostics
+      vim.diagnostic.config({ virtual_text = false }) -- Disable Neovim's default virtual text diagnostics
     end,
+  },
+
+
+  {
+    "seblyng/roslyn.nvim",
+    dependencies = {
+      "microsoft/python-type-stubs", -- Optional: for better Python interop if needed
+    },
+    ft = "cs",                       -- Only load for C# files
+    opts = {
+      config = {
+        -- Specify your manual Roslyn installation
+        cmd = {
+          "dotnet",
+          "/usr/local/roslyn/lib/net9.0/Microsoft.CodeAnalysis.LanguageServer.dll",
+          "--logLevel=Information",
+          "--extensionLogDirectory=" .. vim.fs.joinpath(vim.uv.os_tmpdir(), "roslyn_ls/logs"),
+        },
+
+        -- Unity-specific settings
+        settings = {
+          ["csharp|inlay_hints"] = {
+            csharp_enable_inlay_hints_for_implicit_object_creation = true,
+            csharp_enable_inlay_hints_for_implicit_variable_types = true,
+            csharp_enable_inlay_hints_for_lambda_parameter_types = true,
+            csharp_enable_inlay_hints_for_types = true,
+            dotnet_enable_inlay_hints_for_parameters = true,
+          },
+          ["csharp|code_lens"] = {
+            dotnet_enable_references_code_lens = true,
+          },
+          ["csharp|completion"] = {
+            dotnet_show_completion_items_from_unimported_namespaces = true,
+            dotnet_show_name_completion_suggestions = true,
+          },
+        },
+
+        -- Important for Unity: find the .sln file
+        -- root_dir = require("roslyn.config").root_dir,
+        root_dir = function(fname)
+          return require("lspconfig.util").root_pattern("*.sln")(fname)
+              or require("lspconfig.util").root_pattern("*.csproj")(fname)
+        end,
+
+      },
+
+      -- Unity assemblies - add Unity's reference assemblies
+      exe = {
+        "dotnet",
+        "/usr/local/roslyn/lib/net9.0/Microsoft.CodeAnalysis.LanguageServer.dll",
+      },
+    },
   }
 
 }
