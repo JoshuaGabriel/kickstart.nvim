@@ -582,6 +582,9 @@ require('lazy').setup({
       indent = { enable = true, disable = { 'ruby' } },
     },
   },
+  {
+    'nvim-treesitter/nvim-treesitter-context'
+  },
 
   { import = 'custom.plugins' },
 }, {
