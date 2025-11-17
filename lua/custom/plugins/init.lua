@@ -131,6 +131,8 @@ return {
       vim.o.foldlevel = 99
       vim.o.foldlevelstart = 99
       vim.o.foldenable = true
+      -- vim.o.foldcolumn = 'auto:8'
+      vim.o.foldcolumn = "0"
 
       -- Keymaps for opening/closing all folds
       vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
@@ -142,13 +144,13 @@ return {
           return { 'treesitter', 'indent' }
         end,
         -- Optional: Configure preview for folds
-        preview = {
-          win_config = {
-            border = { '', '─', '', '', '', '─', '', '' },
-            winhighlight = 'Normal:Folded',
-            winblend = 0
-          }
-        }
+        -- preview = {
+        --   win_config = {
+        --     border = { '', '─', '', '', '', '─', '', '' },
+        --     winhighlight = 'Normal:Folded',
+        --     winblend = 0
+        --   }
+        -- }
       })
     end
   },
@@ -216,29 +218,29 @@ return {
       },
     },
   },
-  {
-    "folke/snacks.nvim",
-    priority = 1000,
-    lazy = false,
-    ---@type snacks.Config
-    opts = {
-      -- your configuration comes here
-      -- or leave it empty to use the default settings
-      -- refer to the configuration section below
-      bigfile = { enabled = true },
-      dashboard = { enabled = true },
-      explorer = { enabled = true },
-      indent = { enabled = true },
-      input = { enabled = false },
-      picker = { enabled = true },
-      notifier = { enabled = true },
-      quickfile = { enabled = true },
-      scope = { enabled = true },
-      scroll = { enabled = false },
-      statuscolumn = { enabled = true },
-      words = { enabled = false },
-    },
-  },
+  -- {
+  --   "folke/snacks.nvim",
+  --   priority = 1000,
+  --   lazy = false,
+  --   ---@type snacks.Config
+  --   opts = {
+  --     -- your configuration comes here
+  --     -- or leave it empty to use the default settings
+  --     -- refer to the configuration section below
+  --     bigfile = { enabled = true },
+  --     dashboard = { enabled = true },
+  --     explorer = { enabled = true },
+  --     indent = { enabled = true },
+  --     input = { enabled = true },
+  --     picker = { enabled = true },
+  --     notifier = { enabled = true },
+  --     quickfile = { enabled = true },
+  --     scope = { enabled = true },
+  --     scroll = { enabled = false },
+  --     statuscolumn = { enabled = true },
+  --     words = { enabled = true },
+  --   },
+  -- },
   {
     "sindrets/diffview.nvim",
     enhanced_diff_hl = true, -- Enable enhanced diff highlighting
@@ -367,6 +369,10 @@ return {
         "/usr/local/roslyn/lib/net9.0/Microsoft.CodeAnalysis.LanguageServer.dll",
       },
     },
+  },
+  {
+    "esmuellert/vscode-diff.nvim",
+    dependencies = { "MunifTanjim/nui.nvim" },
   }
 
 }

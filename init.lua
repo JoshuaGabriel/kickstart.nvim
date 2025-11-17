@@ -14,10 +14,11 @@ vim.opt.softtabstop = 4  -- Backspace deletes 4 spaces
 vim.opt.expandtab = true -- Convert tabs to spaces
 -- let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g ""'
 
-
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
-vim.api.nvim_set_keymap('n', '<leader>F', '<cmd>lua vim.lsp.buf.format()<CR>', { noremap = true, silent = true })
+vim.keymap.set({ 'n', 'v' }, '<leader>F', function()
+  vim.lsp.buf.format({ async = true })
+end, { noremap = true, silent = true, desc = '[F]ormat buffer/range' })
 -- vim.api.nvim_set_keymap('n', '<leader>pf', '<cmd>lua require("null-ls").formatting.black()<CR>', { noremap = true, silent = true, desc = 'Format Python with Black' })
 
 
@@ -73,6 +74,38 @@ if vim.env.TMUX ~= nil then
     cache_enabled = 0,
   }
 end
+
+-- Debug command: :DebugAttach <process_name>
+-- Deferred to after dap plugin loads
+-- vim.api.nvim_create_autocmd('User', {
+--   pattern = 'VeryLazy',
+--   callback = function()
+--     vim.api.nvim_create_user_command('DebugAttach', function(opts)
+--       local name = opts.args
+--       local pid = vim.fn.system('pidof ' .. name):gsub('%s+', '')
+--       if pid == '' then
+--         vim.notify('Process not found: ' .. name, vim.log.levels.ERROR)
+--         return
+--       end
+--       -- Get the executable path from /proc
+--       local exe_path = vim.fn.resolve('/proc/' .. pid .. '/exe')
+--       if exe_path == '' or exe_path:match('No such file') then
+--         exe_path = vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+--       end
+--       require('dap').run({
+--         name = 'Attach to ' .. name,
+--         type = 'cppdbg',
+--         request = 'attach',
+--         processId = tonumber(pid),
+--         program = exe_path,
+--         cwd = vim.fn.getcwd(),
+--         MIMode = 'gdb',
+--         miDebuggerPath = '/usr/bin/gdb',
+--       })
+--     end, { nargs = 1 })
+--   end,
+-- })
+
 
 vim.opt.breakindent = true
 
@@ -211,81 +244,134 @@ require('lazy').setup({
       },
 
       spec = {
-        { '<leader>c', group = '[C]ode',     mode = { 'n', 'x' } },
-        { '<leader>d', group = '[D]ocument' },
+        { '<leader>c', group = '[C]ode',            mode = { 'n', 'x' } },
+        { '<leader>d', group = '[D]ebug' },
         { '<leader>r', group = '[R]ename' },
         { '<leader>s', group = '[S]earch' },
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
-        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>h', group = 'Git [H]unk',        mode = { 'n', 'v' } },
+        { '<leader>m', group = '[M]arks/Bookmarks', mode = { 'n', 'v' } },
       },
     },
   },
 
+  -- {
+  --   'nvim-telescope/telescope.nvim',
+  --   event = 'VimEnter',
+  --   branch = '0.1.x',
+  --   dependencies = {
+  --     'nvim-lua/plenary.nvim',
+  --     {
+  --       'nvim-telescope/telescope-fzf-native.nvim',
+  --
+  --       build = 'make',
+  --
+  --       cond = function()
+  --         return vim.fn.executable 'make' == 1
+  --       end,
+  --     },
+  --     { 'nvim-telescope/telescope-ui-select.nvim' },
+  --
+  --     { 'nvim-tree/nvim-web-devicons',            enabled = vim.g.have_nerd_font },
+  --   },
+  --   config = function()
+  --     require('telescope').setup {
+  --       extensions = {
+  --         ['ui-select'] = {
+  --           require('telescope.themes').get_dropdown(),
+  --         },
+  --       },
+  --     }
+  --
+  --     pcall(require('telescope').load_extension, 'fzf')
+  --     pcall(require('telescope').load_extension, 'ui-select')
+  --
+  --     local builtin = require 'snacks.picker'
+  --     vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
+  --     vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
+  --     vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+  --     vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
+  --     vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
+  --     vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+  --     vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
+  --     vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
+  --     vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+  --     vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+  --     vim.keymap.set('n', '<leader>sc', builtin.lsp_document_symbols, { desc = '[S]earch do[c]ument symbols' })
+  --
+  --     vim.keymap.set('n', '<leader>/', function()
+  --       builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+  --         winblend = 10,
+  --         previewer = false,
+  --       })
+  --     end, { desc = '[/] Fuzzily search in current buffer' })
+  --
+  --     vim.keymap.set('n', '<leader>s/', function()
+  --       builtin.live_grep {
+  --         grep_open_files = true,
+  --         prompt_title = 'Live Grep in Open Files',
+  --       }
+  --     end, { desc = '[S]earch [/] in Open Files' })
+  --
+  --     vim.keymap.set('n', '<leader>sn', function()
+  --       builtin.find_files { cwd = vim.fn.stdpath 'config' }
+  --     end, { desc = '[S]earch [N]eovim files' })
+  --   end,
+  -- },
   {
-    'nvim-telescope/telescope.nvim',
-    event = 'VimEnter',
-    branch = '0.1.x',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      {
-        'nvim-telescope/telescope-fzf-native.nvim',
-
-        build = 'make',
-
-        cond = function()
-          return vim.fn.executable 'make' == 1
-        end,
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    ---@type snacks.Config
+    opts = {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
+      bigfile = { enabled = true },
+      dashboard = { enabled = true },
+      explorer = { enabled = true },
+      indent = { enabled = true },
+      input = { enabled = true },
+      picker = {
+        enabled = true,
+        jump = { reuse_win = true },
       },
-      { 'nvim-telescope/telescope-ui-select.nvim' },
-
-      { 'nvim-tree/nvim-web-devicons',            enabled = vim.g.have_nerd_font },
+      notifier = { enabled = true },
+      quickfile = { enabled = true },
+      scope = { enabled = true },
+      scroll = { enabled = false },
+      statuscolumn = { enabled = true },
+      words = { enabled = true },
     },
     config = function()
-      require('telescope').setup {
-        extensions = {
-          ['ui-select'] = {
-            require('telescope.themes').get_dropdown(),
-          },
-        },
-      }
-
-      pcall(require('telescope').load_extension, 'fzf')
-      pcall(require('telescope').load_extension, 'ui-select')
-
-      local builtin = require 'telescope.builtin'
-      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
+      local builtin = require 'snacks.picker'
+      vim.keymap.set('n', '<leader>sh', builtin.help, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
-      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+      vim.keymap.set('n', '<leader>sf', builtin.files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>ss', builtin.pickers, { desc = '[S]earch [S]elect Pickers' })
+      vim.keymap.set('n', '<leader>sw', builtin.grep_word, { desc = '[S]earch current [W]ord' })
+      vim.keymap.set('n', '<leader>sg', builtin.grep, { desc = '[S]earch by [G]rep' })
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
-      vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+      vim.keymap.set('n', '<leader>s.', builtin.recent, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
-      vim.keymap.set('n', '<leader>sc', builtin.lsp_document_symbols, { desc = '[S]earch do[c]ument symbols' })
+      vim.keymap.set('n', '<leader>sc', builtin.lsp_symbols, { desc = '[S]earch do[c]ument symbols' })
+      vim.keymap.set("n", "<leader>SC", builtin.colorschemes, { desc = "Select colorscheme" })
 
       vim.keymap.set('n', '<leader>/', function()
-        builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-          winblend = 10,
-          previewer = false,
-        })
+        builtin.lines()
       end, { desc = '[/] Fuzzily search in current buffer' })
 
       vim.keymap.set('n', '<leader>s/', function()
-        builtin.live_grep {
-          grep_open_files = true,
-          prompt_title = 'Live Grep in Open Files',
-        }
+        builtin.grep_buffers()
       end, { desc = '[S]earch [/] in Open Files' })
 
       vim.keymap.set('n', '<leader>sn', function()
-        builtin.find_files { cwd = vim.fn.stdpath 'config' }
+        builtin.files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
     end,
   },
-
   {
     'folke/lazydev.nvim',
     ft = 'lua',
@@ -316,17 +402,12 @@ require('lazy').setup({
             vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
 
-          map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-
-          map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-
-          map('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-
-          map('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
-
-          map('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-
-          map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+          map('gd', require('snacks.picker').lsp_definitions, '[G]oto [D]efinition')
+          map('gr', require('snacks.picker').lsp_references, '[G]oto [R]eferences')
+          map('gI', require('snacks.picker').lsp_implementations, '[G]oto [I]mplementation')
+          map('<leader>D', require('snacks.picker').lsp_type_definitions, 'Type [D]efinition')
+          map('<leader>ds', require('snacks.picker').lsp_symbols, '[D]ocument [S]ymbols')
+          map('<leader>ws', require('snacks.picker').lsp_workspace_symbols, '[W]orkspace [S]ymbols')
 
           map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
 
@@ -359,10 +440,21 @@ require('lazy').setup({
           end
 
           if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+            -- Enable inlay hints by default
+            vim.lsp.inlay_hint.enable(true, { bufnr = event.buf })
+
             map('<leader>th', function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
             end, '[T]oggle Inlay [H]ints')
           end
+
+          -- Signature help when typing function arguments
+          if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_signatureHelp) then
+            map('<C-s>', vim.lsp.buf.signature_help, 'Signature Help', 'i')
+          end
+
+          -- Hover documentation
+          map('K', vim.lsp.buf.hover, 'Hover Documentation')
         end,
       })
 
@@ -370,8 +462,8 @@ require('lazy').setup({
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
       local servers = {
-        clangd       = {
-          cmd = { "clangd", "--background-index", "-j=62", "--pch-storage=memory", "--clang-tidy" },
+        clangd        = {
+          cmd = { "clangd", "--background-index", "-j=4", "--pch-storage=memory", "--clang-tidy" },
           root_dir = require('lspconfig.util').root_pattern('compile_commands.json', '.git'),
           settings = {
             clangd = {
@@ -383,8 +475,8 @@ require('lazy').setup({
         -- gopls         = {},
         -- ocamllsp      = {},
         -- pyright       = {},
-        basedpyright = {},
-        ruff         = {},
+        basedpyright  = {},
+        ruff          = {},
         -- perlnavigator = {},
         -- pylsp         = {},
         -- pylsp         = {
@@ -404,25 +496,13 @@ require('lazy').setup({
         -- cssls         = {},
         -- tailwindcss   = {},
 
-        -- rust_analyzer = {
-        --   cmd = vim.lsp.rpc.connect("127.0.0.1", 27631),
-        --   settings = {
-        --     ["rust-analyzer"] = {
-        --       lspMux = {
-        --         version = "1",
-        --         method = "connect",
-        --         server = "rust-analyzer",
-        --       },
-        --     },
-        --   },
-        --
-        -- },
+        rust_analyzer = {},
         -- omnisharp    = {},
         -- csharpier    = {},
         -- netcoredbg   = {},
         -- fantomas     = {},
-        bashls       = {},
-        lua_ls       = {
+        bashls        = {},
+        lua_ls        = {
           settings = {
             Lua = {
               completion = {
@@ -529,29 +609,50 @@ require('lazy').setup({
   },
 
   {
+    "sainnhe/everforest",
+    config = function()
+      -- Set contrast: 'hard', 'medium' (default), or 'soft'
+      vim.g.everforest_background = "soft"
+      -- Optional: enable italic/bold
+      -- vim.g.everforest_enable_italic = 1
+      -- Load the colorscheme
+      vim.cmd([[colorscheme everforest]])
+    end,
+  },
+
+  {
     'folke/tokyonight.nvim',
     priority = 1000,
+    -- init = function()
+    --   vim.cmd.colorscheme 'tokyonight-night'
+    --
+    --   vim.cmd.hi 'Comment gui=none'
+    -- end,
+  },
+  {
+    "rebelot/kanagawa.nvim",
+    name = "kanagawa",
+    priority = 1000,
     init = function()
-      vim.cmd.colorscheme 'tokyonight-night'
-
+      vim.cmd.colorscheme 'kanagawa'
       vim.cmd.hi 'Comment gui=none'
     end,
   },
 
-  { "catppuccin/nvim",      name = "catppuccin", priority = 1000 },
-  { "sainnhe/everforest",   name = "everforest", priority = 1000 },
+
+  -- { "catppuccin/nvim",      name = "catppuccin", priority = 1000 },
   {
     "EdenEast/nightfox.nvim",
     name = "nightfox",
-    priority = 999,
-    init = function()
-      -- vim.cmd.colorscheme 'dayfox'
-
-      vim.cmd.hi 'Comment gui=none'
-    end,
+    -- priority = 999,
+    -- init = function()
+    --   vim.cmd.colorscheme 'dayfox'
+    --
+    --   vim.cmd.hi 'Comment gui=none'
+    -- end,
   },
 
-  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
+  { 'folke/todo-comments.nvim',  event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
   {
     'echasnovski/mini.nvim',
@@ -583,9 +684,13 @@ require('lazy').setup({
     },
   },
   {
-    'nvim-treesitter/nvim-treesitter-context'
+    'nvim-treesitter/nvim-treesitter-context',
+    opts = {
+      max_lines = 3,
+    },
   },
 
+  { import = 'kickstart.plugins' },
   { import = 'custom.plugins' },
 }, {
   ui = {
