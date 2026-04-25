@@ -4,68 +4,6 @@
 -- See the kickstart.nvim README for more information
 return {
 
-  -- {
-  --   'yetone/avante.nvim',
-  --   event = 'VeryLazy',
-  --   lazy = true,
-  --   version = false, -- set this if you want to always pull the latest change
-  --   opts = {
-  --     provider = 'copilot',
-  --     copilot = {
-  --       model = "gemini-2.5-pro",
-  --     },
-  --     auto_suggestions_provider = 'copilot',
-  --     behaviour = {
-  --       auto_suggestions = false, -- Experimental stage
-  --     },
-  --   },
-  --   -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-  --   build = 'make',
-  --   -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
-  --   dependencies = {
-  --     'nvim-treesitter/nvim-treesitter',
-  --     'stevearc/dressing.nvim',
-  --     'nvim-lua/plenary.nvim',
-  --     'MunifTanjim/nui.nvim',
-  --     --- The below dependencies are optional,
-  --     'nvim-tree/nvim-web-devicons', -- or echasnovski/mini.icons
-  --     {
-  --       'zbirenbaum/copilot.lua',
-  --       opts = {},
-  --     }, -- for providers='copilot'
-  --     {
-  --       -- support for image pasting
-  --       'HakonHarnes/img-clip.nvim',
-  --       event = 'VeryLazy',
-  --       opts = {
-  --         -- recommended settings
-  --         default = {
-  --           embed_image_as_base64 = false,
-  --           prompt_for_file_name = false,
-  --           drag_and_drop = {
-  --             insert_mode = true,
-  --           },
-  --           -- required for Windows users
-  --           use_absolute_path = true,
-  --         },
-  --       },
-  --     },
-  --     {
-  --       -- Make sure to set this up properly if you have lazy=true
-  --       'MeanderingProgrammer/render-markdown.nvim',
-  --       opts = {
-  --         file_types = { 'markdown', 'Avante' },
-  --       },
-  --       ft = { 'markdown', 'Avante' },
-  --     },
-  --   },
-  -- },
-  -- { -- Leap plugin for enhanced navigation
-  --   'ggandor/leap.nvim',
-  --   config = function()
-  --     require('leap').add_default_mappings()
-  --   end,
-  -- },
   {
     'linrongbin16/gitlinker.nvim',
     cmd = 'GitLink',
@@ -218,29 +156,29 @@ return {
       },
     },
   },
-  -- {
-  --   "folke/snacks.nvim",
-  --   priority = 1000,
-  --   lazy = false,
-  --   ---@type snacks.Config
-  --   opts = {
-  --     -- your configuration comes here
-  --     -- or leave it empty to use the default settings
-  --     -- refer to the configuration section below
-  --     bigfile = { enabled = true },
-  --     dashboard = { enabled = true },
-  --     explorer = { enabled = true },
-  --     indent = { enabled = true },
-  --     input = { enabled = true },
-  --     picker = { enabled = true },
-  --     notifier = { enabled = true },
-  --     quickfile = { enabled = true },
-  --     scope = { enabled = true },
-  --     scroll = { enabled = false },
-  --     statuscolumn = { enabled = true },
-  --     words = { enabled = true },
-  --   },
-  -- },
+  {
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    ---@type snacks.Config
+    opts = {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
+      bigfile = { enabled = true },
+      dashboard = { enabled = true },
+      explorer = { enabled = true },
+      indent = { enabled = true },
+      input = { enabled = true },
+      picker = { enabled = true },
+      notifier = { enabled = true },
+      quickfile = { enabled = true },
+      scope = { enabled = true },
+      scroll = { enabled = false },
+      statuscolumn = { enabled = true },
+      words = { enabled = true },
+    },
+  },
   {
     "sindrets/diffview.nvim",
     enhanced_diff_hl = true, -- Enable enhanced diff highlighting
@@ -256,19 +194,6 @@ return {
       },
     },
   },
-  -- {
-  --   "CopilotC-Nvim/CopilotChat.nvim",
-  --   dependencies = {
-  --     { "github/copilot.vim" },                       -- or zbirenbaum/copilot.lua
-  --     { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
-  --   },
-  --   build = "make tiktoken",                          -- Only on MacOS or Linux
-  --   opts = {
-  --     -- See Configuration section for options
-  --     model = 'claude-3.5-sonnet',
-  --   },
-  --   -- See Commands section for default commands if you want to lazy load on them
-  -- },
   {
     'romgrk/barbar.nvim',
     dependencies = {
@@ -320,59 +245,63 @@ return {
   },
 
 
-  {
-    "seblyng/roslyn.nvim",
-    dependencies = {
-      "microsoft/python-type-stubs", -- Optional: for better Python interop if needed
-    },
-    ft = "cs",                       -- Only load for C# files
-    opts = {
-      config = {
-        -- Specify your manual Roslyn installation
-        cmd = {
-          "dotnet",
-          "/usr/local/roslyn/lib/net9.0/Microsoft.CodeAnalysis.LanguageServer.dll",
-          "--logLevel=Information",
-          "--extensionLogDirectory=" .. vim.fs.joinpath(vim.uv.os_tmpdir(), "roslyn_ls/logs"),
-        },
-
-        -- Unity-specific settings
-        settings = {
-          ["csharp|inlay_hints"] = {
-            csharp_enable_inlay_hints_for_implicit_object_creation = true,
-            csharp_enable_inlay_hints_for_implicit_variable_types = true,
-            csharp_enable_inlay_hints_for_lambda_parameter_types = true,
-            csharp_enable_inlay_hints_for_types = true,
-            dotnet_enable_inlay_hints_for_parameters = true,
-          },
-          ["csharp|code_lens"] = {
-            dotnet_enable_references_code_lens = true,
-          },
-          ["csharp|completion"] = {
-            dotnet_show_completion_items_from_unimported_namespaces = true,
-            dotnet_show_name_completion_suggestions = true,
-          },
-        },
-
-        -- Important for Unity: find the .sln file
-        -- root_dir = require("roslyn.config").root_dir,
-        root_dir = function(fname)
-          return require("lspconfig.util").root_pattern("*.sln")(fname)
-              or require("lspconfig.util").root_pattern("*.csproj")(fname)
-        end,
-
-      },
-
-      -- Unity assemblies - add Unity's reference assemblies
-      exe = {
-        "dotnet",
-        "/usr/local/roslyn/lib/net9.0/Microsoft.CodeAnalysis.LanguageServer.dll",
-      },
-    },
-  },
+  -- {
+  --   "seblyng/roslyn.nvim",
+  --   dependencies = {
+  --     "microsoft/python-type-stubs", -- Optional: for better Python interop if needed
+  --   },
+  --   ft = "cs",                       -- Only load for C# files
+  --   opts = {
+  --     config = {
+  --       -- Specify your manual Roslyn installation
+  --       cmd = {
+  --         "dotnet",
+  --         "/usr/local/roslyn/lib/net9.0/Microsoft.CodeAnalysis.LanguageServer.dll",
+  --         "--logLevel=Information",
+  --         "--extensionLogDirectory=" .. vim.fs.joinpath(vim.uv.os_tmpdir(), "roslyn_ls/logs"),
+  --       },
+  --
+  --       -- Unity-specific settings
+  --       settings = {
+  --         ["csharp|inlay_hints"] = {
+  --           csharp_enable_inlay_hints_for_implicit_object_creation = true,
+  --           csharp_enable_inlay_hints_for_implicit_variable_types = true,
+  --           csharp_enable_inlay_hints_for_lambda_parameter_types = true,
+  --           csharp_enable_inlay_hints_for_types = true,
+  --           dotnet_enable_inlay_hints_for_parameters = true,
+  --         },
+  --         ["csharp|code_lens"] = {
+  --           dotnet_enable_references_code_lens = true,
+  --         },
+  --         ["csharp|completion"] = {
+  --           dotnet_show_completion_items_from_unimported_namespaces = true,
+  --           dotnet_show_name_completion_suggestions = true,
+  --         },
+  --       },
+  --
+  --       -- Important for Unity: find the .sln file
+  --       -- root_dir = require("roslyn.config").root_dir,
+  --       root_dir = function(fname)
+  --         return require("lspconfig.util").root_pattern("*.sln")(fname)
+  --             or require("lspconfig.util").root_pattern("*.csproj")(fname)
+  --       end,
+  --
+  --     },
+  --
+  --     -- Unity assemblies - add Unity's reference assemblies
+  --     exe = {
+  --       "dotnet",
+  --       "/usr/local/roslyn/lib/net9.0/Microsoft.CodeAnalysis.LanguageServer.dll",
+  --     },
+  --   },
+  -- },
   {
     "esmuellert/vscode-diff.nvim",
     dependencies = { "MunifTanjim/nui.nvim" },
-  }
+  },
+  {
+  "JoshuaGabriel/wayfinder.nvim",
+  opts = {},
+}
 
 }

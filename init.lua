@@ -12,6 +12,7 @@ vim.opt.tabstop = 4      -- Tab width = 4 spaces
 vim.opt.shiftwidth = 4   -- Indentation width = 4 spaces
 vim.opt.softtabstop = 4  -- Backspace deletes 4 spaces
 vim.opt.expandtab = true -- Convert tabs to spaces
+vim.keymap.set("n", "<leader>wf", "<Plug>(WayfinderOpen)", { desc = "Wayfinder" })
 -- let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l -g ""'
 
 -- Don't show the mode, since it's already in the status line
@@ -19,6 +20,7 @@ vim.opt.showmode = false
 vim.keymap.set({ 'n', 'v' }, '<leader>F', function()
   vim.lsp.buf.format({ async = true })
 end, { noremap = true, silent = true, desc = '[F]ormat buffer/range' })
+vim.api.nvim_set_keymap('v', '<leader>F', '<cmd>lua vim.lsp.buf.format()<CR>', { noremap = true, silent = true })
 -- vim.api.nvim_set_keymap('n', '<leader>pf', '<cmd>lua require("null-ls").formatting.black()<CR>', { noremap = true, silent = true, desc = 'Format Python with Black' })
 
 
@@ -381,7 +383,7 @@ require('lazy').setup({
       },
     },
   },
-  { 'Bilal2453/luvit-meta', lazy = true },
+  { 'Bilal2453/luvit-meta',     lazy = true },
   {
     'neovim/nvim-lspconfig',
     dependencies = {
@@ -608,17 +610,17 @@ require('lazy').setup({
     end,
   },
 
-  {
-    "sainnhe/everforest",
-    config = function()
-      -- Set contrast: 'hard', 'medium' (default), or 'soft'
-      vim.g.everforest_background = "soft"
-      -- Optional: enable italic/bold
-      -- vim.g.everforest_enable_italic = 1
-      -- Load the colorscheme
-      vim.cmd([[colorscheme everforest]])
-    end,
-  },
+  -- {
+  --   "sainnhe/everforest",
+  --   config = function()
+  --     -- Set contrast: 'hard', 'medium' (default), or 'soft'
+  --     vim.g.everforest_background = "soft"
+  --     -- Optional: enable italic/bold
+  --     -- vim.g.everforest_enable_italic = 1
+  --     -- Load the colorscheme
+  --     vim.cmd([[colorscheme everforest]])
+  --   end,
+  -- },
 
   {
     'folke/tokyonight.nvim',
@@ -636,6 +638,7 @@ require('lazy').setup({
     init = function()
       vim.cmd.colorscheme 'kanagawa'
       vim.cmd.hi 'Comment gui=none'
+      vim.o.background = "dark"
     end,
   },
 
@@ -652,7 +655,7 @@ require('lazy').setup({
     -- end,
   },
 
-  { 'folke/todo-comments.nvim',  event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
+  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
   {
     'echasnovski/mini.nvim',
